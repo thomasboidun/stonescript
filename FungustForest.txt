@@ -1,0 +1,30 @@
+var voidweaverIsInvoked
+
+equipL triskelion
+equipR compound shield
+
+? loc.begin | loc.loop
+  voidweaverIsInvoked = false
+
+? voidweaverIsInvoked = false
+  equip aether_talisman
+  ? item.CanActivate("aether_talisman")
+    activate aether_talisman
+    ? item.CanActivate("voidweaver")
+      voidweaverIsInvoked = true
+:
+  ? foe.distance <= 22
+    equipL wand poison dp
+    equipR wand poison D
+
+  ? foe.distance <= 7
+    equip heavy hammer
+
+  // Dodging Mr.Puff's explosion
+  ? foe = "Mr. Puff" & 
+  ^ foe.distance <= 4 &
+  ^ Cooldown("mind") <= 0
+    equipL mind
+
+  ? foe = "Angry Shroom"
+    >Angry Shroom
