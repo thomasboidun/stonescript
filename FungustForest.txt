@@ -75,38 +75,45 @@ var check
       // On punch starting frames
       ? foe.state = 32 & 
       ^ foe.time <= punchStartingFrames & 
-      ^ punchCounter < punchCounterLimit
+      ^ punchCounter < punchCounterLimit &
+      ^ shootCounter = 0
         >Punch starting frames
 
       // On punch hit frame
       ? foe.state = 32 &
       ^ foe.time = punchHitFrame &
-      ^ punchCounter < punchCounterLimit
+      ^ punchCounter < punchCounterLimit &
+      ^ shootCounter = 0
         >Punch hit frame
         punchCounter++
 
       // On punch recovery frames
       ? foe.state = 33 & 
-      ^ foe.time <= punchRecoveryFrames
-      ^ punchCounter <= punchCounterLimit
+      ^ foe.time <= punchRecoveryFrames &
+      ^ punchCounter <= punchCounterLimit &
+      ^ shootCounter = 0
         >Punch recovery frames
 
       // On shoot starting frames
       ? foe.state = 32 &
       ^ foe.time <= shootStartingFrames &
-      ^ punchCounter = punchCounterLimit
+      ^ punchCounter = punchCounterLimit &
+      ^ shootCounter < shootCounterLimit
         >Shoot starting frames
 
       // On shoot hit frame
       ? foe.state = 32 &
       ^ foe.time = shootHitFrame &
-      ^ punchCounter = punchCounterLimit
+      ^ punchCounter = punchCounterLimit &
+      ^ shootCounter < shootCounterLimit
         >Shoot hit frame
+        shootCounter++
 
       // On shoot recovery frames
       ? foe.state = 33 &
       ^ foe.time <= shootRecoveryFrames &
-      ^ punchCounter = punchCounterLimit
+      ^ punchCounter = punchCounterLimit &
+      ^ shootCounter <= shootCounterLimit
         >Shoot recovery frames
 
       // Reset counter
