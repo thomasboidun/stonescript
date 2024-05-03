@@ -7,44 +7,62 @@ disable hud r
 // import Cosmetics/Hats/Skully
 // import Cosmetics/Hats/Helmet
 
-var to_begin = false
+var toBegin = false
 var then = false
 var finally = false
 
-var voidweaver_is_invoked = false
-
-
+var voidweaverIsInvoked = false
 
 func Init()
   >Init function works!
-  to_begin = false
+  toBegin = false
   then = false
   finally = false
 
-  voidweaver_is_invoked = false
+  voidweaverIsInvoked = false
 // End of Init function.
 
 ? loc.begin | loc.loop
   Init()
 
-func Cooldown(cooldown_id)
-  return item.GetCooldown(cooldown_id)
+func Cooldown(cooldownId)
+  return item.GetCooldown(cooldownId)
+
+func Get(matrix, searchKey)
+  var count = matrix.Count()
+  for i = 0 .. count - 1
+    var k = matrix[i][0]
+    var v = matrix[i][1]
+    ? string.Equals(k, searchKey)
+      return v
+  return none
+// end of Get function.
+
+func Set(matrix, keyName, value)
+  var count = matrix.Count()
+  for i = 0 .. count - 1
+    var k = matrix[i][0]
+    ? string.Equals(p, prop)
+      matrix.Emplace(i, [keyName, value])
+      return
+  matrix.Add([keyName, value])
+  return
 
 func InvokeVoidweaver()
   >InvokeVoidweaver function works!
-  ? voidweaver_is_invoked = false
+  ? voidweaverIsInvoked = false
     equip aether_talisman
     ? item.CanActivate("aether_talisman")
       activate aether_talisman
     ? item.CanActivate("voidweaver")
-      voidweaver_is_invoked = true
+      voidweaverIsInvoked = true
 // End of InvokeVoidweaver function.
 
 func ToBegin()
   >ToBegin function works!
   InvokeVoidweaver()
-  ? voidweaver_is_invoked = true
-    to_begin = true
+  ? voidweaverIsInvoked = true
+    toBegin = true
 // End of ToBegin function.
 
 func RockyPlateau()
@@ -75,68 +93,68 @@ func AngryShroom()
   var self = angryShroom
 
   var punchCounter =
-  ^ get(self, "punchCounter")
+  ^ Get(self, "punchCounter")
 
   var punchCounterLimit =
-  ^ get(self, "punchCounterLimit")
+  ^ Get(self, "punchCounterLimit")
 
   var punchDuration =
-  ^ get(self, "punchDuration")
+  ^ Get(self, "punchDuration")
 
   var shootCounter =
-  ^ get(self, "shootCounter")
+  ^ Get(self, "shootCounter")
 
   var shootCounterLimit =
-  ^ get(self, "shootCounterLimit")
+  ^ Get(self, "shootCounterLimit")
 
   var shootDuration =
-  ^ get(self, "shootDuration")
+  ^ Get(self, "shootDuration")
 
   ? loc.stars > 3
-    set(self, "punchDuration", 49)
-    set(self, "shootCounterLimit", 5)
+    Set(self, "punchDuration", 49)
+    Set(self, "shootCounterLimit", 5)
 
   ? loc.stars > 4 & loc.stars <= 10
-    set(self, "shootDuration", 9)
+    Set(self, "shootDuration", 9)
 
-  ? foe.name = get(self, "name")
+  ? foe.name = Get(self, "name")
     ? foe.state = 32 &
     ^ punchCounter < punchCounterLimit
       // Punch starting frames
-      set(self, "punchFrame", foe.time)
+      Set(self, "punchFrame", foe.time)
 
-      ? foe.time = get(self, "punchDuration")
+      ? foe.time = Get(self, "punchDuration")
         // Punch hit frame
         punchCounter = punchCounter + 1
-        set(self, "punchCounter", punchCounter)
+        Set(self, "punchCounter", punchCounter)
 
     ? foe.state = 32 &
     ^ punchCounter = punchCounterLimit
       // Shoot starting frames
-      set(self, "shootFrame", foe.time)
+      Set(self, "shootFrame", foe.time)
 
       ? foe.time = shootDuration
         // Active bullet frame
         var shootCounter = shootCounter + 1
-        set(self, "shootCounter", shootCounter)
+        Set(self, "shootCounter", shootCounter)
 
     ? foe.state = 33 &
     ^ punchCounter <= punchCounterLimit &
     ^ shootCounter = 0
       // Punch recovery frames
-      set(self, "punchRecoveryFrame", foe.time)
+      Set(self, "punchRecoveryFrame", foe.time)
 
     ? foe.state = 33 &
     ^ punchCounter = punchCounterLimit &
     ^ shootCounter <= shootCounterLimit
       // Shoot recovery frames
-      set(self, "shootRecoveryFrame", foe.time)
+      Set(self, "shootRecoveryFrame", foe.time)
   
     ? foe.state = 33 &
     ^ punchCounter = punchCounterLimit &
     ^ shootCounter = shootCounterLimit
-      set(self, "punchCounter", 0)
-      set(self, "shootCounter", 0)
+      Set(self, "punchCounter", 0)
+      Set(self, "shootCounter", 0)
 
 func FungusForest()
   >FungusForest function works!
@@ -149,33 +167,34 @@ func FungusForest()
     equip heavy_hammer
   
   // Dodging Mr.Puff's explosion
-  ? foe = explode & foe.distance <= 4 & Cooldown("mind") <= 0
+  ? foe = explode & foe.distance <= 4 
+  ^ & Cooldown("mind") <= 0
     equipL mind
 
   ? loc = boss
     angryShroom = AngryShroom()
 
-    >@get(angryShroom, "name")@\n
+    >@Get(angryShroom, "name")@\n
     ^punchCounter: 
-    ^@get(angryShroom, "punchCounter")@\n
+    ^@Get(angryShroom, "punchCounter")@\n
     ^punchCounterLimit: 
-    ^@get(angryShroom, "punchCounterLimit")@\n
+    ^@Get(angryShroom, "punchCounterLimit")@\n
     ^punchFrame: 
-    ^@get(angryShroom, "punchFrame")@\n
+    ^@Get(angryShroom, "punchFrame")@\n
     ^punchDuration: 
-    ^@get(angryShroom, "punchDuration")@\n
+    ^@Get(angryShroom, "punchDuration")@\n
     ^punchRecoveryFrame: 
-    ^@get(angryShroom, "punchRecoveryFrame")@\n
+    ^@Get(angryShroom, "punchRecoveryFrame")@\n
     ^shootCounter: 
-    ^@get(angryShroom, "shootCounter")@\n
+    ^@Get(angryShroom, "shootCounter")@\n
     ^shootCounterLimit: 
-    ^@get(angryShroom, "shootCounterLimit")@\n
+    ^@Get(angryShroom, "shootCounterLimit")@\n
     ^shootFrame: 
-    ^@get(angryShroom, "shootFrame")@\n
+    ^@Get(angryShroom, "shootFrame")@\n
     ^shootDuration: 
-    ^@get(angryShroom, "shootDuration")@\n
+    ^@Get(angryShroom, "shootDuration")@\n
     ^shootRecoveryFrame: 
-    ^@get(angryShroom, "shootRecoveryFrame")@\n
+    ^@Get(angryShroom, "shootRecoveryFrame")@\n
 
 // End of FungusForest function.
 
@@ -242,7 +261,7 @@ func Finally()
 
 func Main()
   >Main function works!
-  ? to_begin = false
+  ? toBegin = false
     return ToBegin()
   ? then = false
     return Then()
