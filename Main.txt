@@ -1,0 +1,133 @@
+disable hud r
+
+// import Cosmetics/PetBoo
+// import Cosmetics/PetSpider
+// import Cosmetics/Hats/Skully
+// import Cosmetics/Hats/Helmet
+
+var to_begin = false
+var then = false
+var finally = false
+
+var voidweaver_is_invoked = false
+
+func Init()
+  >Init function works!
+  to_begin = false
+  then = false
+  finally = false
+
+  voidweaver_is_invoked = false
+// End of Init function.
+
+? loc.begin | loc.loop
+  Init()
+
+func Cooldown(cooldown_id)
+  return item.GetCooldown(cooldown_id)
+
+func InvokeVoidweaver()
+  >InvokeVoidweaver function works!
+  ? voidweaver_is_invoked = false
+    equip aether_talisman
+    ? item.CanActivate("aether_talisman")
+      activate aether_talisman
+    ? item.CanActivate("voidweaver")
+      voidweaver_is_invoked = true
+// End of InvokeVoidweaver function.
+
+func ToBegin()
+  >ToBegin function works!
+  InvokeVoidweaver()
+  ? voidweaver_is_invoked = true
+    to_begin = true
+// End of ToBegin function.
+
+func RockyPlateau()
+  >RockyPlateau function works!
+// End of RockyPlateau function.
+
+func DeadwoodValley()
+  >DeadwoodValley function works!
+// End of DeadwoodValley function.
+
+func CausticCaves()
+  >CausticCaves function works!
+// End of CausticCaves function.
+
+func FungusForest()
+  >FungusForest function works!
+// End of FungusForest function.
+
+func UndeadCrypt()
+  >UndeadCrypt function works!
+  ? foe.distance <= 20
+    equip socketed_staff ah
+  ? foe.distance <= 10
+  ^ & foe ! immune_to_physical
+  ^ & Cooldown("quarterstaff") <= 0
+    equip quarterstaff
+    activate R
+// End of UndeadCrypt function.
+
+func BronzeMine()
+  >BronzeMine function works!
+// End of BronzeMine function.
+
+func IcyRidge()
+  >IcyRidge function works!
+// End of IcyRidge function.
+
+func Temple()
+  >Temple function works!
+// End of Temple function.
+
+func Then()
+  >Then function works!
+
+  loadout 1
+
+  ? hp < 10
+    activate potion
+
+  ? loc.id = rocky_plateau
+    RockyPlateau()
+  ? loc.id = deadwood_valley
+    DeadwoodValley()
+  ? loc.id = caustic_caves
+    CausticCaves()
+  ? loc.id = fungus_forest
+    FungusForest()
+  ? loc.id = undead_crypt
+    UndeadCrypt()
+  ? loc.id = bronze_mine
+    BronzeMine()
+  ? loc.id = icy_ridge
+    IcyRidge()
+  ? loc.id = temple
+    Temple()
+
+  ? pickup.distance <= 10
+    equipL star
+
+  ? pickup = treasure
+    then = true
+// End of Then function.
+
+func Finally()
+  >Finally function works!
+  equipL star
+  equipR triskelion
+// End of Finally function.
+
+func Main()
+  >Main function works!
+  ? to_begin = false
+    return ToBegin()
+  ? then = false
+    return Then()
+  ? finally = false
+    return Finally()
+// End of Main function.
+
+Main()
