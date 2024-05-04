@@ -56,8 +56,8 @@ var check
 
   ? loc = fungus_forest
     ? foe.distance <= 22
-      equipL wand poison dp
-      equipR wand poison D
+      equipL wand dP
+      equipR wand D
 
     ? foe.distance <= 7
       equip heavy hammer
@@ -69,8 +69,26 @@ var check
       equipL mind
 
     ? foe = Angry Shroom
-      equipL star
-      equipR compound
+      // On walk frames
+      ? foe.state = 2
+        >Walk
+        ? foe.distance > 5
+          equipL wand dP
+          equipR wand D
+        :
+          equipL wand dP
+          equipR hammer dP
+
+      // On punch frames
+      ? (foe.state = 32 | foe.state = 33) &
+      ^ punchCounter <= punchCounterLimit &
+      ^ shootCounter = 0
+        ? foe.distance > 5
+          equipL wand dP
+          equipR wand D
+        :
+          equipL wand dP
+          equipR hammer dP
 
       // On punch starting frames
       ? foe.state = 32 & 
@@ -78,6 +96,10 @@ var check
       ^ punchCounter < punchCounterLimit &
       ^ shootCounter = 0
         >Punch starting frames
+        ? foe.time = punchStartingFrames &
+        ^ item.GetCooldown("mind") <= 0
+          equipL wand D
+          equipR mind
 
       // On punch hit frame
       ? foe.state = 32 &
@@ -93,6 +115,16 @@ var check
       ^ punchCounter <= punchCounterLimit &
       ^ shootCounter = 0
         >Punch recovery frames
+
+      // On shoot frames
+      ? (foe.state = 32 | foe.state = 33) &
+      ^ punchCounter = punchCounterLimit &
+      ^ shootCounter <= shootCounterLimit
+        ? foe.distance > 5
+          equipL wand dP
+        :
+          equipL hammer dP
+        equipR shield ah
 
       // On shoot starting frames
       ? foe.state = 32 &
@@ -123,4 +155,11 @@ var check
       ^ shootCounter = shootCounterLimit
         punchCounter = 0
         shootCounter = 0
+
+      // As soon as possible
+      ? foe.distance <= 7 &
+      ^ foe.armor = 0 &
+      ^ item.GetCooldown("hammer") <= 0
+        equip heavy_hammer
+        activate R
       
