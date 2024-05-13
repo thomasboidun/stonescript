@@ -1,0 +1,4 @@
+func TreasureLeft()
+  var tCount = item.getTreasureCount()
+  var tLimit = item.getTreasureLimit()
+  return tCount + "/" + tLimit
