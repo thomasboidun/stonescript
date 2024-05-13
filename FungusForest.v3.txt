@@ -38,10 +38,16 @@ var MorelARF = 30 // Atk Recovery Frames
       ShroomSHF = 9
       ShroomSRF = 9
 
-  ? foe.distance > 15
+  ? foe.distance > 30
     equipL triskelion
     equipR poison shield ap
-  :? foe.distance <= 15 & foe.distance >= 11
+  :? foe.distance <= 30 & foe.distance > 23 &
+  ^ item.CanActivate() &
+  ^ item.GetCooldown("quarterstaff") <= 0
+    equip quarterstaff
+    ? item.CanActivate("quarterstaff")
+      activate R
+  :? foe.distance <= 23 & foe.distance >= 11
     equipL triskelion
     equipR dashing shield
   :
@@ -54,10 +60,11 @@ var MorelARF = 30 // Atk Recovery Frames
         equipR poison hammer dP
       :
         equipL poison sword D -long
-        equipR compound shield
+        equipR vigor shield shield
 
     // Mini Boss
-    ? foe = snail & foe = boss
+    ? foe = snail & foe = boss &
+    ^ foe.distance < 11
       equipL poison hammer D
       equipR poison hammer dP
 
