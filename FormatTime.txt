@@ -1,4 +1,4 @@
-func formatTime(frames)
+func FormatTime(frames)
   var s = frames / 30
   var m = s / 60
   var h = m / 60
@@ -20,4 +20,4 @@ func formatTime(frames)
   ? s < 10
     s = "0" + s
 
-  return h+":"+m+":"+s
+  return h + ":" + m + ":" + s
