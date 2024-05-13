@@ -43,15 +43,15 @@ var MorelARF = 30 // Atk Recovery Frames
     equipR poison shield ap
   ? foe.distance <= 30 & foe.distance > 23 &
   ^ item.CanActivate() &
-  ^ item.GetCooldown("quarterstaff") <= 0
+  ^ item.GetCooldown(＂quarterstaff＂) <= 0
     equip quarterstaff
-    ? item.CanActivate("quarterstaff")
+    ? item.CanActivate(＂quarterstaff＂)
       activate R
   ? foe.distance <= 23 & foe.distance >= 11
     equipL triskelion
     equipR dashing shield
   ? foe.distance <= 10
-    ? foe.GetCount(10) > 1
+    ? foe.GetCount(23) > 1
       equipL poison long sword D
       equipR poison long sword dP
     :
@@ -74,7 +74,7 @@ var MorelARF = 30 // Atk Recovery Frames
       equipR poison long sword dP
       // Dodging explosion
       ? foe.distance <= 4 &
-      ^ item.GetCooldown("mind") <= 0
+      ^ item.GetCooldown(＂mind＂) <= 0
         equipL triskelion
         equipR mind
 
@@ -93,11 +93,11 @@ var MorelARF = 30 // Atk Recovery Frames
       equipL hammer D
       equipR hammer dP
       ? foe.time = ShroomPSF &
-      ^ item.GetCooldown("mind") <= 0
+      ^ item.GetCooldown(＂mind＂) <= 0
         equipL mind
         equipR vigor shield ah
       ? foe.time = ShroomPSF &
-      ^ item.GetCooldown("mind") > 0
+      ^ item.GetCooldown(＂mind＂) > 0
         equipL poison hammer dP
         equipR vigor shield ah
 
@@ -215,13 +215,13 @@ func FormatTime(frames)
     s = 0
 
   ? h < 10
-    h = "0" + h
+    h = ＂0＂ + h
   ? m < 10
-    m = "0" + m
+    m = ＂0＂ + m
   ? s < 10
-    s = "0" + s
+    s = ＂0＂ + s
 
-  return h + ":" + m + ":" + s
+  return h + ＂:＂ + m + ＂:＂ + s
 
 func TimeLeft()
   var tCount = item.getTreasureCount()
@@ -232,7 +232,7 @@ func TimeLeft()
 func TreasureLeft()
   var tCount = item.getTreasureCount()
   var tLimit = item.getTreasureLimit()
-  return tCount + "/" + tLimit
+  return tCount + ＂/＂ + tLimit
 
 >Treasures: @TreasureLeft()@\n
 ^Time left: @FormatTime(TimeLeft())@\n
