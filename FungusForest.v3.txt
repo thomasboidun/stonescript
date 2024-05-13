@@ -41,16 +41,16 @@ var MorelARF = 30 // Atk Recovery Frames
   ? foe.distance > 30
     equipL triskelion
     equipR poison shield ap
-  :? foe.distance <= 30 & foe.distance > 23 &
+  ? foe.distance <= 30 & foe.distance > 23 &
   ^ item.CanActivate() &
   ^ item.GetCooldown("quarterstaff") <= 0
     equip quarterstaff
     ? item.CanActivate("quarterstaff")
       activate R
-  :? foe.distance <= 23 & foe.distance >= 11
+  ? foe.distance <= 23 & foe.distance >= 11
     equipL triskelion
     equipR dashing shield
-  :
+  ? foe.distance <= 10
     ? foe.GetCount(10) > 1
       equipL poison long sword D
       equipR poison long sword dP
