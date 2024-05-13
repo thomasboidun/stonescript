@@ -139,7 +139,7 @@ var MorelARF = 30 // Atk Recovery Frames
     ^ ShroomSC <= ShroomSCL
       >Shoot recovery frames
       equipL poison hammer D
-      equipR vigor shield ah
+      equipR poison hammer dP
 
     // Reset counter
     ? foe.state = 33 &
@@ -166,7 +166,7 @@ var MorelARF = 30 // Atk Recovery Frames
       equipR poison hammer dP
     :
       equipL poison long sword D
-      equipR poison long swor dP
+      equipR poison sword D -long
     ? hp < maxhp
       equipR vigor shield ah
     // Before Morel's punch hit frame
