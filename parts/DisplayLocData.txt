@@ -1,0 +1,56 @@
+func TreasureLeft()
+  var tCount = item.getTreasureCount()
+  var tLimit = item.getTreasureLimit()
+  return tCount + "/" + tLimit
+
+
+func TimeLeft()
+  var tCount = item.getTreasureCount()
+  var tLimit = item.getTreasureLimit()
+  var tLeft = tLimit - tCount
+  return (tLeft * loc.averageTime) - totaltime
+
+
+func FormatTime(frames)
+  var s = frames / 30
+  var m = s / 60
+  var h = m / 60
+
+  s = s % 60
+  m = m % 60
+
+  ? h < 0
+    h = 0
+  ? m < 0
+    m = 0
+  ? s < 0
+    s = 0
+
+  ? h < 10
+    h = "0" + h
+  ? m < 10
+    m = "0" + m
+  ? s < 10
+    s = "0" + s
+
+  return h + ":" + m + ":" + s
+
+
+func DisplayLocData()
+  var tr_lft = TreasureLeft() + " "
+  var ti_lft = FormatTime(TimeLeft())
+  var avg_ti = FormatTime(loc.averageTime)
+  var bst_ti = FormatTime(loc.bestTime)
+  var ttl_ti = FormatTime(totaltime)
+
+  >╔══════════════════════╗\n
+  ^║ Treasures │ @tr_lft@ ║\n
+  ^║ Time left │ @ti_lft@ ║\n
+  ^║───────────┼──────────║\n
+  ^║ Avg. time │ @avg_ti@ ║\n
+  ^║ Best time │ @bst_ti@ ║\n
+  ^║ Ttl. time │ @ttl_ti@ ║\n
+  ^╚══════════════════════╝
+
+
+DisplayLocData()
