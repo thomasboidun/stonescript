@@ -1,5 +1,0 @@
-func TimeLeft()
-  var tCount = item.getTreasureCount()
-  var tLimit = item.getTreasureLimit()
-  var tLeft = tLimit - tCount
-  return (tLeft * loc.averageTime) - totaltime
