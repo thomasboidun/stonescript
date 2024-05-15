@@ -1,7 +1,13 @@
 func TreasureLeft()
   var tCount = item.getTreasureCount()
   var tLimit = item.getTreasureLimit()
-  return tCount + "/" + tLimit
+  
+  ? tCount < 10
+    return "00" + tCount + "/" + tLimit
+  :? tCount < 100
+    return "0" + tCount + "/" + tLimit
+  :
+    return tCount + "/" + tLimit
 
 
 func TimeLeft()
