@@ -3,6 +3,7 @@ var PallasA1HF = 70
 var PallasA2SF = 20
 var PallasA2HF = 21
 
+// Animation Cancel
 func AnimationCancel()
   var isTwoHanded = !item.left
   var leftItem = item.left
@@ -26,22 +27,24 @@ func AnimationCancel()
 
 AnimationCancel()
 
+// Equip Functions
 func EquipDashing()
   equipL trisk
   equipR dashing *10
 
+
 func EquipWands()
-  ? hp = maxhp
-    equipL aether wand dU *10 +15
-  :
-    equipL vigor wand dL *10 +15
+  equipL vigor wand dL *10 +15
   equipR vigor wand D *10 +15
+
 
 func EquipSwords()
   equipL vigor sword dL *10 +15
   equipR vigor sword D *10 +15
 
-? loc ! boss
+
+// Fighting Foes
+? loc = haunted_halls & loc ! boss
   ? foe.distance > 10
     EquipDashing()
     ? item.CanActivate() &
@@ -51,10 +54,11 @@ func EquipSwords()
         activate R
   ? foe.distance <= 10
     EquipWands()
-    ? foe = boss
+    ? foe = boss // Mini Boss
       EquipSwords()
-// Boss
-? foe = Pallas
+
+// Fighting Boss
+? loc = haunted_halls & foe = Pallas
   ? foe = phase1
     ? foe.distance > 10
       EquipDashing()
@@ -74,12 +78,12 @@ func EquipSwords()
       :
         EquipSwords()
 
+// Pickup 
 ? pickup
   equipL trisk
   equipR star
 
 // Display Loc Data
-
 func TreasureLeft()
   var tCount = item.getTreasureCount()
   var tLimit = item.getTreasureLimit()
@@ -90,7 +94,6 @@ func TreasureLeft()
     return ＂0＂ + tCount + ＂/＂ + tLimit
   :
     return tCount + ＂/＂ + tLimit
-
 
 
 func TimeLeft()
