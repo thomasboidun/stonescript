@@ -6,80 +6,76 @@
   equipR shield *0 +0
   equipR @item.right@
 
-var invoked = false
-var maxpp = 3 // pick pocket
-var buffpp = ＂pick_pocket:＂ + maxpp
+var pickpocketbuff = ＂pick_pocket:＂ + 3
 
 ? loc = mine
-  ? loc.begin | loc.loop
-    invoked = false
-    ?item.potion = empty
-      brew wood + bronze // berserk potion
-  ? !invoked
+  ? loc.begin &
+  ^ item.potion = empty
+    brew wood + bronze // berserk potion 
+
+  ? foe.distance > 17
     equipL triskelion
-    equipR fire talisman
-    ? item.CanActivate(＂fire_talisman＂) &
-    ^ item.GetCooldown(＂fire_talisman＂) <= 0
-      activate R
-    ? summon.count > 0
-      invoked = true   
-
-  ? invoked
-    ? foe.distance > 17
-      equipL triskelion
-      equipR compound shield *10
-
-    ? foe.distance <= 17
-      equipL triskelion
-      equipR dashing shield *10
-
-    ? foe.distance <= 11
-      equipL sword *0 +0
-      equipR compound shield *10
-
-    ? foe.distance <= 6
-      equip skeleton arm
+    equipR compound shield *10
+  ? foe.distance <= 17
+    equipL triskelion
+    equipR dashing shield *10
+  ? foe.distance <= 11
+    equipL sword *0 +0
+    equipR compound shield *10
+  ? foe.distance <= 6
+    equip skeleton arm
     
-    ? item.CanActivate()
-      ? item.GetCooldown(＂quarterstaff＂) <= 0
-        equip quarterstaff *10
-        activate R
+  ? item.CanActivate()
+    /* INVOKE CINDERWISP */   
+    ? summon.GetId() ! ＂cinderwisp＂
+      equipR fire talisman
+      activate R
+
+    /* USE PICK POCKET */
+    :? item.GetCooldown(＂skeleton_arm＂) <= 0 &
+    ^  buffs.string = pickpocketbuff &
+    ^  foe.distance <= 6
+       equip skeleton arm
+       activate R
+
+    /* USE BLADE OF THE FALLEN GOD */
+    :? item.GetCooldown(＂blade＂) <= 0 &
+    ^  foe.count >= 5
+       equip blade
+       activate R
+
+    /* USE QUARTERSTAFF DASH */   
+    :? item.GetCooldown(＂quarterstaff＂) <= 0
+      equip quarterstaff *10
+      activate R
+
+  : /* CAN'T ACTIVATE ITEMS */
+    equipL triskelion
+    equipR compound shield *10
+    ? hp < maxhp
+      equipR ouroboros
+
+  /* BOSS */ 
+  ? foe = bronze_guardian &
+  ^ item.CanActivate()
+    equipL aether wand dU *10
+    equipR aether wand D *10
+
+    /* APPLY DEBUFFS */
+    ? buffs.string = smite &
+    ^ foe.debuffs.string ! debuff_damage &
+    ^ foe.debuffs.string ! debuff_dot
+      equipL poison wand dP *10
+      equipR fire wand dF *10
       
-      ? foe.count >= 5 &
-      ^ item.GetCooldown(＂blade＂) <= 0
-        equip blade
-        activate R
+    ? item.GetCooldown(＂mask＂) <= 0
+      equipR mask
+      activate R
 
-      ? foe.distance <= 6 &
-      ^ item.GetCooldown(＂skeleton_arm＂) <= 0 &
-      ^ buffs.string = buffpp
-        equip skeleton arm
-        activate R
+    ? item.potion = berserk
+      activate potion
 
-  ? foe = bronze_guardian
-    ? !item.CanActivate()
-      equipL triskelion
-      ? hp = maxhp
-        equipR compound shield *10
-      :
-        equipR ouroboros
-    :
-      ? buffs.string = smite &
-      ^ foe.debuffs.string ! debuff_damage &
-      ^ foe.debuffs.string ! debuff_dot
-        equipL poison wand dP *10
-        equipR fire wand dF *10
-      :
-        equipL aether wand dU *10
-        equipR aether wand D *10
-
-      ? item.GetCooldown(＂mask＂) <= 0
-        equipR mask
-        activate R
-
-      ? item.potion = berserk
-        activate potion
-
+    /* DODGE BRONZE GUARDIAN HAMMER HIT */
     ? foe.state = 32 & foe.time >= 30
       equipL mind
       equipR mask
