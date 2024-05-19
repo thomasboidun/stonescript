@@ -10,34 +10,35 @@
   ? loc.begin & item.potion = empty
     brew wood + bronze // berserk potion
 
-  ? foe.distance > 17
-    equipL triskelion
-    equipR compound shield *10
-
   ? summon.GetId() ! "cinderwisp"
     equipL triskelion
     equipR fire talisman
     activate R
   :
-    ? item.CanActivate() &
-    ^ item.GetCooldown("quarterstaff") <= 0
-      equip quarterstaff *10
-      activate R
+    ? foe.distance > 17
+      equipL triskelion
+      equipR compound shield *10
+
+    ? foe.distance <= 17
+      equipL triskelion
+      equipR compound shield *10
+
+    ? foe.distance <= 6
+      equip skeleton arm
+      ? item.CanActivate("skeleton_arm") &
+      ^ item.GetCooldown("skeleton_arm") <= 0 &
+      ^ foe.debuffs.string = "pick_pocket:2"
+        activate R
+    
+    ? item.CanActivate()
+      ? item.GetCooldown("quarterstaff") <= 0
+        equip quarterstaff *10
+        activate R
       
-    ? foe.count >= 5 &
-    ^ item.GetCooldown("blade") <= 0
-      equip blade
-      activate R
-
-  ? foe.distance <= 17
-    equipL triskelion
-    equipR compound shield *10
-
-  ? foe.distance <= 6
-    equip skeleton arm
-    ? item.GetCooldown("skeleton_arm") <= 0 &
-    ^ foe.debuffs.string = "pick_pocket:2"
-      activate R
+      ? foe.count >= 5 &
+      ^ item.GetCooldown("blade") <= 0
+        equip blade
+        activate R
 
   ? foe = bronze_guardian
     ? !item.CanActivate()
