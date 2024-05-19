@@ -6,45 +6,61 @@
   equipR shield *0 +0
   equipR @item.right@
 
-? loc = mine
-  ? loc.begin & item.potion = empty
-    brew wood + bronze // berserk potion
+var invoked = false
+var maxpp = 3 // pick pocket
+var buffpp = ＂pick_pocket:＂ + maxpp
 
-  ? summon.GetId() ! "cinderwisp"
+? loc = mine
+  ? loc.begin | loc.loop
+    invoked = false
+    ?item.potion = empty
+      brew wood + bronze // berserk potion
+  ? !invoked
     equipL triskelion
     equipR fire talisman
-    activate R
-  :
+    ? item.CanActivate(＂fire_talisman＂) &
+    ^ item.GetCooldown(＂fire_talisman＂) <= 0
+      activate R
+    ? summon.count > 0
+      invoked = true   
+
+  ? invoked
     ? foe.distance > 17
       equipL triskelion
       equipR compound shield *10
 
     ? foe.distance <= 17
       equipL triskelion
+      equipR dashing shield *10
+
+    ? foe.distance <= 11
+      equipL sword *0 +0
       equipR compound shield *10
 
     ? foe.distance <= 6
       equip skeleton arm
-      ? item.CanActivate("skeleton_arm") &
-      ^ item.GetCooldown("skeleton_arm") <= 0 &
-      ^ foe.debuffs.string = "pick_pocket:2"
-        activate R
     
     ? item.CanActivate()
-      ? item.GetCooldown("quarterstaff") <= 0
+      ? item.GetCooldown(＂quarterstaff＂) <= 0
         equip quarterstaff *10
         activate R
       
       ? foe.count >= 5 &
-      ^ item.GetCooldown("blade") <= 0
+      ^ item.GetCooldown(＂blade＂) <= 0
         equip blade
+        activate R
+
+      ? foe.distance <= 6 &
+      ^ item.GetCooldown(＂skeleton_arm＂) <= 0 &
+      ^ buffs.string = buffpp
+        equip skeleton arm
         activate R
 
   ? foe = bronze_guardian
     ? !item.CanActivate()
       equipL triskelion
       ? hp = maxhp
-        equipR mask
+        equipR compound shield *10
       :
         equipR ouroboros
     :
@@ -57,12 +73,12 @@
         equipL aether wand dU *10
         equipR aether wand D *10
 
-      ? item.potion = berserk
-        activate potion
-
-      ? item.GetCooldown("mask") <= 0
+      ? item.GetCooldown(＂mask＂) <= 0
         equipR mask
         activate R
+
+      ? item.potion = berserk
+        activate potion
 
     ? foe.state = 32 & foe.time >= 30
       equipL mind
