@@ -1,0 +1,2 @@
+func FramesToTime(frames)
+  return frames + "f"
