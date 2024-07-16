@@ -24,7 +24,8 @@ var treasurePanelVisible = false
 var treasureText = null
 
 ? (loc.begin | loc.loop) &
-^ locationIds.Contains(loc.id)
+^ locationIds.Contains(loc.id) &
+^ !loc.isQuest
   treasureButton = DrawTreasureButton()
   treasurePanel = DrawTreasurePanel()
   treasureText = treasurePanel.children[0]
