@@ -1,13 +1,13 @@
-var locationIds = ［
-  ＂rocky_plateau＂,
-  ＂deadwood_valley＂,
-  ＂caustic_caves＂, 
-  ＂fungus_forest＂,
-  ＂undead_crypt＂,
-  ＂bronze_mine＂, 
-  ＂icy_ridge＂, 
-  ＂temple＂
-］
+var locationIds = [
+  "rocky_plateau",
+  "deadwood_valley",
+  "caustic_caves", 
+  "fungus_forest",
+  "undead_crypt",
+  "bronze_mine", 
+  "icy_ridge", 
+  "temple"
+]
 
 var treasureart = ascii
 #___
@@ -27,7 +27,7 @@ var treasureText = null
 ^ locationIds.Contains(loc.id)
   treasureButton = DrawTreasureButton()
   treasurePanel = DrawTreasurePanel()
-  treasureText = treasurePanel.children［0］
+  treasureText = treasurePanel.children[0]
 
 ? treasurePanel & treasurePanel.visible
   treasureText.text = GetTreasureText()
@@ -35,8 +35,8 @@ var treasureText = null
 
 func DrawTreasureButton()
   var p = ui.AddPanel()
-  p.anchor = ＂top_left＂
-  p.dock = ＂top_left＂
+  p.anchor = "top_left"
+  p.dock = "top_left"
   p.visible = true
   p.color = #888
   p.style = 1
@@ -46,21 +46,21 @@ func DrawTreasureButton()
   p.y = treasureButtonY
 
   var b = ui.AddButton()
-  b.anchor = ＂center_center＂
-  b.dock = ＂center_center＂
-  b.visible = ＂inherit＂
+  b.anchor = "center_center"
+  b.dock = "center_center"
+  b.visible = "inherit"
   b.style = 1
-  b.text = ＂＂
+  b.text = ""
   b.w = 9
   b.h = 5
   b.SetDown(ShowTreasurePanel)
   p.Add(b)
 
   var a = ui.AddAnim(treasureart)
-  a.anchor = ＂center_center＂
-  a.dock = ＂center_center＂
-  a.visible = ＂inherit＂
-  a.color = ＂#white＂
+  a.anchor = "center_center"
+  a.dock = "center_center"
+  a.visible = "inherit"
+  a.color = "#white"
   p.Add(a)
 
   return p
@@ -72,9 +72,9 @@ func ShowTreasurePanel()
 
 func DrawTreasurePanel()
   var p = ui.AddPanel()
-  p.anchor = ＂top_left＂
-  p.dock = ＂top_left＂
-  p.color = ＂#888＂
+  p.anchor = "top_left"
+  p.dock = "top_left"
+  p.color = "#888"
   p.visible = treasurePanelVisible
   p.w = 25
   p.h = 5
@@ -82,41 +82,41 @@ func DrawTreasurePanel()
   p.y = treasureButton.y
 
   var t = ui.AddText()
-  t.anchor = ＂center_center＂
-  t.dock = ＂center_center＂
-  t.visible = ＂inherit＂
+  t.anchor = "center_center"
+  t.dock = "center_center"
+  t.visible = "inherit"
   t.w = 25
   t.h = 3
-  t.align = ＂center＂
+  t.align = "center"
   p.Add(t)
 
   return p
 
 
 func GetTreasureText()
-  var lines = ［］
-  var text = ＂＂
-  var template = ＂＂
+  var lines = []
+  var text = ""
+  var template = ""
 
   var count = item.GetTreasureCount()
   var limit = item.GetTreasureLimit()
 
-  lines.Add(count + ＂/＂ + limit)
+  lines.Add(count + "/" + limit)
 
   ? count = limit
-    text = ＂Max treasure limit reached!＂
+    text = "Max treasure limit reached!"
     lines.Add(text)
-    text = string.Join(＂\n＂, lines)
+    text = string.Join("\n", lines)
 
-    template = ＂［color=#red］｛0｝［/color］＂
+    template = "[color=#red]{0}[/color]"
     return string.Format(template, text)
 
   ? count > 0
-    template = ＂［color=#yellow］｛0｝［/color］＂
-    lines［0］ = string.Format(template, lines［0］)
+    template = "[color=#yellow]{0}[/color]"
+    lines[0] = string.Format(template, lines[0])
 
-  text = ＂Full inventory in:＂
-  template = ＂［color=#888］｛0｝［/color］＂
+  text = "Full inventory in:"
+  template = "[color=#888]{0}[/color]"
   lines.Add(string.Format(template, text))
 
   var treasureLeft = limit - count
@@ -125,12 +125,12 @@ func GetTreasureText()
   var timeLeft = FramesToTime(frameLeft)
   lines.Add(timeLeft)
 
-  return string.Join(＂\n＂, lines)
+  return string.Join("\n", lines)
 
 
 func FramesToTime(frames)
   ? frames = 0
-    return ＂-＂
+    return "-"
 
   var frameRate = 30
 
@@ -142,30 +142,30 @@ func FramesToTime(frames)
   var h = totalMinutes / 60
 
   ? f < 10
-    f = ＂0＂ + f
+    f = "0" + f
   ? s < 10
-    s = ＂0＂ + s
+    s = "0" + s
   ? m < 10
-    m = ＂0＂ + m
+    m = "0" + m
 
-  var t = ＂＂
+  var t = ""
 
   ? h ! 0
-    t += h + ＂h＂
-    t += m + ＂m＂
-    t += s + ＂s＂
-    t += f + ＂f＂
+    t += h + "h"
+    t += m + "m"
+    t += s + "s"
+    t += f + "f"
 
-  ? h = 0 & m ! ＂00＂
-    t += m + ＂m＂
-    t += s + ＂s＂
-    t += f + ＂f＂
+  ? h = 0 & m ! "00"
+    t += m + "m"
+    t += s + "s"
+    t += f + "f"
 
-  ? h = 0 & m = ＂00＂ & s ! ＂00＂
-    t += s + ＂s＂
-    t += f + ＂f＂
+  ? h = 0 & m = "00" & s ! "00"
+    t += s + "s"
+    t += f + "f"
 
-  ? h = 0 & m = ＂00＂ & s = ＂00＂ & f ! ＂00＂
-    t += f + ＂f＂
+  ? h = 0 & m = "00" & s = "00" & f ! "00"
+    t += f + "f"
 
   return t
